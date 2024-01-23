@@ -167,11 +167,22 @@
           destinationLng
         );
 
-        //IMAGE PIXELING
-        const pixelateAmount = Math.min(distance / 10, 5); // Adjust the divisor and max pixelation
-        document.getElementById(
-          "sourceMatimg"
-        ).style.filter = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="pixelate"><feFlood result="color" x="0" y="0" width="100%" height="100%" flood-color="black" /><feMorphology in="SourceGraphic" operator="dilate" radius="${pixelateAmount}" /></filter></svg>#pixelate')`;
+        const isChrome =
+          /Chrome/.test(navigator.userAgent) &&
+          /Google Inc/.test(navigator.vendor);
+
+        // Apply image pixeling if the browser is Chrome, otherwise apply image blurring
+        if (isChrome) {
+          const pixelateAmount = Math.min(distance / 10, 5);
+          document.getElementById(
+            "sourceMatimg"
+          ).style.filter = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="pixelate"><feFlood result="color" x="0" y="0" width="100%" height="100%" flood-color="black" /><feMorphology in="SourceGraphic" operator="dilate" radius="${pixelateAmount}" /></filter></svg>#pixelate')`;
+        } else {
+          const blurAmount = Math.min(distance / 10, 5);
+          document.getElementById(
+            "sourceMatimg"
+          ).style.filter = `blur(${blurAmount}px)`;
+        }
 
         //WORD DELETING
         const maxWordsToDelete = Math.floor(distance / 100); // Adjust the divisor
