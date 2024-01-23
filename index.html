@@ -140,10 +140,6 @@
         document.getElementById("sourceMat").style.display = "block";
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showCoordinates, showError);
-          watchId = navigator.geolocation.watchPosition(
-            showPosition,
-            showError
-          );
         } else {
           alert("Geolocation is not supported by this browser.");
         }
@@ -152,6 +148,14 @@
           const userLat = position.coords.latitude.toFixed(6);
           const userLng = position.coords.longitude.toFixed(6);
           console.log("Your Coordinates: " + userLat + ", " + userLng);
+
+          // Clear the watch position after getting the current position
+          if (watchId) {
+            navigator.geolocation.clearWatch(watchId);
+          }
+
+          // Continue with the rest of your code (e.g., showPosition)
+          showPosition(position);
         }
       }
 
