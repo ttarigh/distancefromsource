@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blur Animation</title>
+  <style>
+    body {
+      text-align: center;
+      margin: 50px;
+    }
+    #photo {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body onload="toggleBlur()">
+  <img id="photo" src="selfie.jpg" alt="Photo">
+  <script>
+    let isBlurred = false;
+    let blurLevel = 0;
+
+    function toggleBlur() {
+      const photo = document.getElementById("photo");
+
+      if (isBlurred) {
+        blurLevel = 0;
+      } else {
+        blurLevel = 10;
+      }
+
+      isBlurred = !isBlurred;
+      animateBlur();
+    }
+
+    function animateBlur() {
+      const photo = document.getElementById("photo");
+      const intervalId = setInterval(function () {
+        photo.style.filter = `blur(${blurLevel}px)`;
+
+        if (isBlurred) {
+          blurLevel += 1;
+
+          // Reset to start the loop again after reaching the maximum blur
+          if (blurLevel > 10) {
+            setTimeout(function () {
+              isBlurred = false;
+            }, 1000); // Wait for 1 second before resetting to create a smoother effect
+          }
+        } else {
+          blurLevel -= 1;
+
+          // Reset to start the loop again after reaching no blur
+          if (blurLevel < 0) {
+            isBlurred = true;
+          }
+        }
+      }, 100);
+    }
+  </script>
+</body>
+</html>

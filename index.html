@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I'm the source</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+      }
+
+      #sourceHome {
+        position: relative;
+      }
+
+      #sourceHome h1 {
+        margin-bottom: 20px;
+      }
+
+      #circleContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #circle {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 10px solid rgb(0, 255, 0);
+        background-color: transparent;
+      }
+      #circle:hover {
+        border: 10px solid rgb(255, 0, 0);
+      }
+
+      #textContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      #sourceMat {
+        display: none;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      #sourceMat img {
+        width: 40%;
+        height: auto;
+        float: left;
+      }
+
+      #sourceMat h2 {
+        width: 50%;
+        float: right;
+        text-align: left;
+        margin-left: 20px;
+      }
+      #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 255, 0, 1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loadingOverlay" style="display: none">
+      <h1>LOADING...</h1>
+    </div>
+
+    <div id="sourceHome">
+      <h1>How far am I from THE SOURCE</h1>
+      <div id="circleContainer">
+        <div id="circle" onclick="startLocationTracking()"></div>
+      </div>
+    </div>
+
+    <div id="sourceMat" style="display: none">
+      <img id="sourceMatimg" src="selfie.jpg" alt="selfie" />
+      <h2>
+        This is a body of text that I'm writing. I'm writing this body of text.
+        This is precious information. I think the information is precious. I
+        think it's precious because it is today's diary entry. Life is about
+        beautiful things and beautiful people. If you think the world looks
+        good, guess what: It does. It's not anybody's fault that love is the
+        only thought and pain is the only feeling. If you ask me, that doesn't
+        sound like such a bad situation. Existence is innocent, plеase don't try
+        to think otherwise. At this point, I feel like I'm almost one hundred
+        percent pure angel. People need to stop trying to be cool and they need
+        to start trying to be hot. Because, remember, the enemy is yourself
+        posed as a question. I'm not exactly sure how to write about love or
+        life in a way better than that song. I'm not sure what kinda of
+        vulnerable text I could write in here that would make this website worth
+        visiting for you. I want to make it worth visiting to you. Do you miss
+        me? Do you love me? Did I love you? Is love realy the only thought. I
+        can apply it to pretty much every instance of any action I've ever taken
+        or not taken, especially if you count the absence of thinking about love
+        as technically thinking about love. I saw something like if you walk
+        into a room and something isn't there, but that's all you can think
+        about, then it kinda is there. I hate seeing myself one way and having
+        other people see me another way. Although, most times I believe this is
+        to my benefit. I try to confess as much as possible, even though I heard
+        that's pretty much the opposite of what you're supposed to do. The
+        compulsion feels too good to let go of, the freedom of living without
+        secret, without burden, without anything really... I appreciate it. I
+        think I'm one of the few people that wants to know the future exactly.
+        Because I don't think it would change anything for me. I think very few
+        things would change my given circumstances (emotionally). Everyday I
+        wake up and want to be better, I want to make art, I want to spread
+        love, I want to eat a really good sandwich. I want to meet everyone in
+        the world. The superpower I would choose to have if I could have any
+        would be to possess the ability to communicate with any creature. I have
+        the opportunity to learn a new language for free at the UN, and I don't
+        know which langauge to pick. I don't know what door of the universe to
+        open up for myself and my loved ones. I guess if I had infinite money,
+        I'd just fund bigger projects for myself, buy a big house for all my
+        friends, and spend all day learning languages.
+      </h2>
+    </div>
+
+    <script>
+      let watchId;
+
+      function startLocationTracking() {
+        document.getElementById("loadingOverlay").style.display = "flex";
+
+        document.getElementById("sourceHome").style.display = "none";
+        document.getElementById("sourceMat").style.display = "block";
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showCoordinates, showError);
+          watchId = navigator.geolocation.watchPosition(
+            showPosition,
+            showError
+          );
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+
+        function showCoordinates(position) {
+          const userLat = position.coords.latitude.toFixed(6);
+          const userLng = position.coords.longitude.toFixed(6);
+          console.log("Your Coordinates: " + userLat + ", " + userLng);
+        }
+      }
+
+      function showPosition(position) {
+        const userLat = position.coords.latitude.toFixed(6);
+        const userLng = position.coords.longitude.toFixed(6);
+        const destinationLat = 40.7427846;
+        const destinationLng = -74.331127;
+        const distance = calculateDistance(
+          userLat,
+          userLng,
+          destinationLat,
+          destinationLng
+        );
+
+        //IMAGE PIXELING
+        const pixelateAmount = Math.min(distance / 10, 5); // Adjust the divisor and max pixelation
+        document.getElementById(
+          "sourceMatimg"
+        ).style.filter = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="pixelate"><feFlood result="color" x="0" y="0" width="100%" height="100%" flood-color="black" /><feMorphology in="SourceGraphic" operator="dilate" radius="${pixelateAmount}" /></filter></svg>#pixelate')`;
+
+        //WORD DELETING
+        const maxWordsToDelete = Math.floor(distance / 100); // Adjust the divisor
+
+        const paragraph = document
+          .getElementById("sourceMat")
+          .getElementsByTagName("h2")[0];
+
+        if (maxWordsToDelete > 0) {
+          deleteRandomWords(paragraph, maxWordsToDelete);
+        }
+
+        function deleteRandomWords(paragraph, maxWordsToDelete) {
+          const words = paragraph.textContent.split(" ");
+          const wordsToDelete = Math.min(maxWordsToDelete, words.length);
+
+          for (let i = 0; i < wordsToDelete; i++) {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            words.splice(randomIndex, 1);
+          }
+
+          paragraph.textContent = words.join(" ");
+        }
+
+        //CONSOLE LOG
+        const distanceInCentimeters = distance * 100000; // 1 meter = 100 centimeters
+        console.log(
+          "Distance from SOURCE: " +
+            distance.toFixed(2) +
+            " km (" +
+            distanceInCentimeters.toFixed(2) +
+            " cm)"
+        );
+        document.getElementById("loadingOverlay").style.display = "none";
+      }
+
+      function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = deg2rad(lat2 - lat1);
+        const dLon = deg2rad(lon2 - lon1);
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(deg2rad(lat1)) *
+            Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c;
+        return distance;
+      }
+
+      function deg2rad(deg) {
+        return deg * (Math.PI / 180);
+      }
+
+      function showError(error) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            alert("User denied the request for Geolocation.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable.");
+            break;
+          case error.TIMEOUT:
+            alert("The request to get user location timed out.");
+            break;
+          case error.UNKNOWN_ERROR:
+            alert("An unknown error occurred.");
+            break;
+        }
+      }
+
+      window.addEventListener("unload", function () {
+        if (watchId) {
+          navigator.geolocation.clearWatch(watchId);
+        }
+      });
+    </script>
+  </body>
+</html>
